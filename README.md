@@ -194,6 +194,148 @@ To place a copy of your code in a .zip file, run the following command:
         zip get_all_products_code.zip get_all_products_code.py
         
 Next, to retrieve the name of your S3 bucket, run the following command: 
+                  
+                  aws s3 ls
+<img width="748" alt="image" src="https://github.com/user-attachments/assets/e342e02a-d79a-4d74-83fa-ac48561d4e04" />
+
+Finally, to place the .zip file in the bucket, run the following command. Replace <bucket-name> with the actual bucket name that you retrieved: 
+                  
+                  aws s3 cp get_all_products_code.zip  s3://<bucket-name>
+
+Verify that the command succeeded.
+The response looks like the following: upload: ./get_all_products_code.zip to s3://<bucket-name>/get_all_products_code.zip
+
+<img width="679" alt="image" src="https://github.com/user-attachments/assets/1818df6d-9bd1-4487-9ef5-de251a51f6f8" />
+
+To create the Lambda function, run the following command:
+
+                  python3 get_all_products_wrapper.py
+                  
+The output of the command shows DONE, confirming that the code ran without errors
+
+<img width="358" alt="image" src="https://github.com/user-attachments/assets/f792dd4e-f22c-4a31-bf3d-bbdcb8c40cea" />
+
+Observe the function that you created and test it. NBrowse to the Lambda console. Choose the name of the get_all_products function that you just created
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/a5691f24-0257-4040-9016-57d8e929f2ea" />
+
+In the Code source panel, open (double-click) the get_all_products_code.py file to display the code.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/db75b67e-9994-4fe4-9d57-6911ff0dd138" />
+
+Choose Test. For Event name, enter Products Keep all of the other default test event values, and choose Save. The test event is saved. Choose Test again. A tab that shows the results of your test displays, with a response that shows the data returned from the DynamoDB table. 
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/47f0a367-f1c2-4f0d-9a87-7ce0c997ea94" />
+
+Create a new test event that is called onOffer.
+<ol>
+      <li>In the Code source panel, open the Test menu (choose the arrow icon), and choose Configure test event.</li>
+      <li>Choose Create new event.</li>
+      <li>For Event name, enter onOffer</li>
+</ol>
+
+In the code editor panel, replace the existing code with the following:
+
+                  { "path": "on_offer"
+                  }
+            
+<img width="941" alt="image" src="https://github.com/user-attachments/assets/9b637b65-b893-4817-88f0-dd184f39b447" />
+
+Choose Save. Choose Test. This time, the results only display the items that are on offer and not out of stock. Scroll to the bottom of the test results to the function logs. You see the log message running scan on index. As you can see, your Lambda function is now successfully retrieving data from the DynamoDB table. You have also observed that this one Lambda function can be used to return all menu items or only the ones that are on offer.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/db796d0e-870f-484e-97b4-5fc7ff9d3ba1" />
+
+Congratulations on achieving this milestone! The next step is to configure the REST API to invoke this Lambda function whenever anyone requests product data on the website. You will also need to find a way to pass the path variable to Lambda when customers choose to view only the on offer products.
+
+<h2>Task 3: Configuring the REST API to invoke the Lambda function</h2>
+First, you tested the code locally in AWS Cloud9 to ensure that it worked. Then, you deployed the code as a Lambda function and tested that it worked as deployed. In this task, you will configure the /products and /products/on_offer REST API functions to invoke the get_all_products Lambda function so that the code can be invoked from the café website. 
+Test the existing GET /products resource.
+<ol>
+      <li>Browse to the API Gateway console.</li>
+      <li>Choose the ProductsApi API, and choose the GET method for /products.</li>
+      <li>Notice on the right side of the page that the method is still accessing a "Mock Endpoint".</li>
+      <li>Choose Test, and then choose Test at the bottom of the page.</li>
+      <li>Verify that the Response Body correctly returns the mock data.</li>
+</ol>
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/a252df96-2659-43e5-91a9-fab20417fb38" />
+
+<img width="804" alt="image" src="https://github.com/user-attachments/assets/7f5fa47d-8056-4083-a9a9-6599054cccc8" />
+
+Replace the mock endpoint with the Lambda function.
+<ol>
+      <li>At the top of the page. Ensure that the GET method is still selected under /products.</li>
+      <li>Choose Integration Request and Edit:</li>
+      <li>Integration type: Lambda Function</li>
+      <li>Lambda Region: us-east-1<li>Lambda Function: get_all_products</li>
+      <li>Choose Save</li>
+      <li>Choose Save.</li>
+</ol>
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/bade0489-7600-452c-aaa6-310073b9fa20" />
+
+Notice on the right side of the page that the method is no longer calling a "Mock Endpoint". Instead, it is calling your Lambda function. 
+
+<img width="932" alt="image" src="https://github.com/user-attachments/assets/42c8c26a-67ea-479b-9f0b-fc35316432ad" />
+
+Test the /products GET API call one more time by selecting Test. The call returns output similar to the following:
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/969b96c7-00b5-4636-ab34-3ac3f42834b0" />
+
+Analyze the results. When you switched the integration endpoint from the mock endpoint to the Lambda function, the response headers that permitted Cross-Origin Resource Sharing (CORS) were removed. If you scroll down past the Response Data, the Response Headers section now shows only the following:
+
+<img width="791" alt="image" src="https://github.com/user-attachments/assets/831d8da4-748b-4da2-b0ca-bb5e001dc255" />
+
+The response header does not contain the CORS information that you need because API Gateway resides in a different subdomain (us-east-1.amazonaws.com) than the S3 bucket (s3.amazonaws.com). You could manually add the CORS configuration back to this resource using the AWS SDK. However, API Gateway has a feature that makes it simple to permit CORS.
+
+Re-enable CORS on the /products API resource.
+<ol>
+      <li>Choose /products so that it is highlighted.<l/i>
+      <li>Select the GET method. </li>
+      <li>Select Default 4XX and Default 5XX under Gateway responses. </li>
+      <li>Select GET under Access-Control-Allow-Methods. </li>
+      <li>Choose Save.</li>
+</ol>
+
+Using the same approach, update the /on_offer GET API method.
+<ol>
+      <li>Choose the ProductsApi API, and choose the GET method for /on_offer.</li>
+      <li>Choose Integration Request and configure:</li>
+      <li>Integration type: Lambda Function</li>
+      <li>Lambda Region: us-east-1</li>
+      <li>Lambda Function: get_all_products</li>
+      <li>Choose Save.</li>
+</ol>
+
+<img width="950" alt="image" src="https://github.com/user-attachments/assets/a1ebbcf1-b5b0-4742-ac45-344be9d8dc8c" />
+
+Test the /products GET API call one more time.
+<ol>
+      <li>Choose the GET method for /products.</li>
+      <li>Choose Test, and then choose Test at the bottom of the page.</li>
+      <li>Scroll down to the Response Headers section again.</li>
+      <li>This time, Access-Control-Allow-Origin is included. </li>
+</ol>
+The following is an example of the output (your data will have a different value for Root):
+
+<img width="928" alt="image" src="https://github.com/user-attachments/assets/d63f31cc-0634-4c64-8eeb-27caa7b79f86" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
