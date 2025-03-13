@@ -320,6 +320,27 @@ The following is an example of the output (your data will have a different value
 
 <img width="928" alt="image" src="https://github.com/user-attachments/assets/d63f31cc-0634-4c64-8eeb-27caa7b79f86" />
 
+<ol>
+          <li>Choose /on_offer so that it is highlighted.</li>
+          <li>Choose Enable CORS.</li>
+          <li>Select Default 4XX and Default 5XX under Gateway responses.</li>
+          <li>Select GET under Access-Control-Allow-Methods.</li>
+          <li>Choose Save.</li>
+</ol>
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/64c109f6-9731-49cc-9399-661f60f6bcb1" />
+
+<ol>
+      <li>Test the /on_offer GET API call..</li>
+      <li>Choose the GET method for /products/on_offer.</li>
+      <li>Choose Test, and then choose Test at the bottom of the page.</li>
+      <li>Scroll down to the Response Headers section. Notice that CORS is enabled in the headers.</li>
+</ol>
+
+<img width="770" alt="image" src="https://github.com/user-attachments/assets/0b551fd2-7e52-4140-b793-90c68b59c915" />
+
+
+
 
 
 
