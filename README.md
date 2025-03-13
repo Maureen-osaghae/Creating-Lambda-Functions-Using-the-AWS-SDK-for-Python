@@ -6,9 +6,9 @@ In this lab, I will use the AWS SDK for Python (boto3) to create AWS Lambda func
 
 <h2>What I learned:</h2>
 <ol>
-      <li>Create a Lambda function that queries a DynamoDB database table.</li>
-      <li>Grant sufficient permissions to a Lambda function so that it can read data from DynamoDB.</li>
-      <li>Configure REST API methods to invoke Lambda functions using Amazon API Gateway.</li>
+<li>Create a Lambda function that queries a DynamoDB database table.</li>
+<li>Grant sufficient permissions to a Lambda function so that it can read data from DynamoDB.</li>
+<li>Configure REST API methods to invoke Lambda functions using Amazon API Gateway.</li>
 </ol>
 
 <h2>Business scenario</h2>
@@ -49,9 +49,9 @@ To verify the SDK for Python is installed, run the following command in the AWS 
 
 Take a moment to see what resources the script created.
 <ol>
-      <li>Confirm that an S3 bucket is hosting the café website files:</li>
-      <li>In the Your environments browser tab, browse to the Amazon S3 console, and choose the name of the bucket that was created.</li>
-      <li>Choose index.html and copy the Object URL.</li>
+<li>Confirm that an S3 bucket is hosting the café website files:</li>
+<li>In the Your environments browser tab, browse to the Amazon S3 console, and choose the name of the bucket that was created.</li>
+<li>Choose index.html and copy the Object URL.</li>
 
 </ol>
 
@@ -71,10 +71,10 @@ Choose View table details and then on the Indexes tab, confirm that an index nam
 
 Confirm that the ProductsApi REST API was defined in API Gateway:
 <ol>
-      <li>Browse to the API Gateway console.</li>
-      <li>Choose the name of the ProductsApi API.</li>
-      <li>The API has a GET method for /products and a GET method for /products/on_offer.</li>
-      <li>Finally, the API has POST and OPTIONS methods for /create_report.</li>
+<li>Browse to the API Gateway console.</li>
+<li>Choose the name of the ProductsApi API.</li>
+<li>The API has a GET method for /products and a GET method for /products/on_offer.</li>
+<li>Finally, the API has POST and OPTIONS methods for /create_report.</li>
 <ol>
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/f6d46b86-d771-4969-b9cd-e2c4798b6dfd" />
   
@@ -123,10 +123,10 @@ Replace the <FMI_1> placeholder and the <FMI_2> placeholder with the proper valu
 
       Notice that the code does the following:
 <ol>
-        <li>It creates a boto3 client to interact with the DynamoDB service.</li>
-        <li>It reads the items out of the table and returns the menu data.</li>
-        <li>It also scans the table index and filters for items that are in stock.</li>
-        <li>Save the changes to the file.</li>
+<li>It creates a boto3 client to interact with the DynamoDB service.</li>
+<li>It reads the items out of the table and returns the menu data.</li>
+li>It also scans the table index and filters for items that are in stock.</li>
+<li>Save the changes to the file.</li>
 </ol>
 Test the code locally in AWS Cloud9.
 To ensure that you are in the correct folder, run the following command:
@@ -166,10 +166,10 @@ Notice that this role provides read only access to DynamoDB. The policy provides
 
 Copy the Role ARN value.  You will use this in the next step. Edit the wrapper code that you will use to create the Lambda function.
 <ol>
-      <li>Return to the AWS Cloud9 file browser.</li>
-      <li>Browse to and open python_3/get_all_products_wrapper.py.</li>
-      <li>On line 5, replace <FMI_1> with the role ARN value that you copied.</li>
-      <li>Save the changes to the file.</li>
+<li>Return to the AWS Cloud9 file browser.</li>
+<li>Browse to and open python_3/get_all_products_wrapper.py.</li>
+<li>On line 5, replace <FMI_1> with the role ARN value that you copied.</li>
+<li>Save the changes to the file.</li>
 <o/l>
 
 <img width="715" alt="image" src="https://github.com/user-attachments/assets/1c61a63a-ef99-4ea9-8ed8-f65d7a70cb29" />
@@ -177,9 +177,9 @@ Copy the Role ARN value.  You will use this in the next step. Edit the wrapper c
 Observe what the get_all_products_wrapper.py code will accomplish when it is run:
           Creates a Lambda boto3 client.
 <ol>
-          <li>Sets the name of the role that the Lambda function should use.</li>
-          <li>References the location of the S3 bucket that has the code that the Lambda function should run (the code you just zipped and placed in Amazon S3).</li>
-          <li>Uses all of this information to create a Lambda function. The function definition identifies Python 3.8 as the runtime.</li>
+<li>Sets the name of the role that the Lambda function should use.</li>
+<li>References the location of the S3 bucket that has the code that the Lambda function should run (the code you just zipped and placed in Amazon S3).</li>
+<li>Uses all of this information to create a Lambda function. The function definition identifies Python 3.8 as the runtime.</li>
 </ol>
 Package the code and store it in an S3 bucket.
 <ol>
@@ -229,9 +229,9 @@ Choose Test. For Event name, enter Products Keep all of the other default test e
 
 Create a new test event that is called onOffer.
 <ol>
-      <li>In the Code source panel, open the Test menu (choose the arrow icon), and choose Configure test event.</li>
-      <li>Choose Create new event.</li>
-      <li>For Event name, enter onOffer</li>
+<li>In the Code source panel, open the Test menu (choose the arrow icon), and choose Configure test event.</li>
+<li>Choose Create new event.</li>
+<li>For Event name, enter onOffer</li>
 </ol>
 
 In the code editor panel, replace the existing code with the following:
@@ -251,11 +251,11 @@ Congratulations on achieving this milestone! The next step is to configure the R
 First, you tested the code locally in AWS Cloud9 to ensure that it worked. Then, you deployed the code as a Lambda function and tested that it worked as deployed. In this task, you will configure the /products and /products/on_offer REST API functions to invoke the get_all_products Lambda function so that the code can be invoked from the café website. 
 Test the existing GET /products resource.
 <ol>
-      <li>Browse to the API Gateway console.</li>
-      <li>Choose the ProductsApi API, and choose the GET method for /products.</li>
-      <li>Notice on the right side of the page that the method is still accessing a "Mock Endpoint".</li>
-      <li>Choose Test, and then choose Test at the bottom of the page.</li>
-      <li>Verify that the Response Body correctly returns the mock data.</li>
+<li>Browse to the API Gateway console.</li>
+<li>Choose the ProductsApi API, and choose the GET method for /products.</li>
+<li>Notice on the right side of the page that the method is still accessing a "Mock Endpoint".</li>
+<li>Choose Test, and then choose Test at the bottom of the page.</li>
+<li>Verify that the Response Body correctly returns the mock data.</li>
 </ol>
 
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/a252df96-2659-43e5-91a9-fab20417fb38" />
@@ -264,12 +264,12 @@ Test the existing GET /products resource.
 
 Replace the mock endpoint with the Lambda function.
 <ol>
-      <li>At the top of the page. Ensure that the GET method is still selected under /products.</li>
-      <li>Choose Integration Request and Edit:</li>
-      <li>Integration type: Lambda Function</li>
-      <li>Lambda Region: us-east-1<li>Lambda Function: get_all_products</li>
-      <li>Choose Save</li>
-      <li>Choose Save.</li>
+<li>At the top of the page. Ensure that the GET method is still selected under /products.</li>
+<li>Choose Integration Request and Edit:</li>
+<li>Integration type: Lambda Function</li>
+<li>Lambda Region: us-east-1<li>Lambda Function: get_all_products</li>
+<li>Choose Save</li>
+<li>Choose Save.</li>
 </ol>
 
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/bade0489-7600-452c-aaa6-310073b9fa20" />
@@ -290,54 +290,93 @@ The response header does not contain the CORS information that you need because 
 
 Re-enable CORS on the /products API resource.
 <ol>
-      <li>Choose /products so that it is highlighted.<l/i>
-      <li>Select the GET method. </li>
-      <li>Select Default 4XX and Default 5XX under Gateway responses. </li>
-      <li>Select GET under Access-Control-Allow-Methods. </li>
-      <li>Choose Save.</li>
+<li>Choose /products so that it is highlighted.<l/i>
+<li>Select the GET method. </li>
+<li>Select Default 4XX and Default 5XX under Gateway responses. </li>
+<li>Select GET under Access-Control-Allow-Methods. </li>
+<li>Choose Save.</li>
 </ol>
 
 Using the same approach, update the /on_offer GET API method.
 <ol>
-      <li>Choose the ProductsApi API, and choose the GET method for /on_offer.</li>
-      <li>Choose Integration Request and configure:</li>
-      <li>Integration type: Lambda Function</li>
-      <li>Lambda Region: us-east-1</li>
-      <li>Lambda Function: get_all_products</li>
-      <li>Choose Save.</li>
+<li>Choose the ProductsApi API, and choose the GET method for /on_offer.</li>
+<li>Choose Integration Request and configure:</li>
+<li>Integration type: Lambda Function</li>
+<li>Lambda Region: us-east-1</li>
+<li>Lambda Function: get_all_products</li>
+<li>Choose Save.</li>
 </ol>
 
 <img width="950" alt="image" src="https://github.com/user-attachments/assets/a1ebbcf1-b5b0-4742-ac45-344be9d8dc8c" />
 
 Test the /products GET API call one more time.
 <ol>
-      <li>Choose the GET method for /products.</li>
-      <li>Choose Test, and then choose Test at the bottom of the page.</li>
-      <li>Scroll down to the Response Headers section again.</li>
-      <li>This time, Access-Control-Allow-Origin is included. </li>
+<li>Choose the GET method for /products.</li>
+<li>Choose Test, and then choose Test at the bottom of the page.</li>
+<li>Scroll down to the Response Headers section again.</li>
+<li>This time, Access-Control-Allow-Origin is included. </li>
 </ol>
 The following is an example of the output (your data will have a different value for Root):
 
 <img width="928" alt="image" src="https://github.com/user-attachments/assets/d63f31cc-0634-4c64-8eeb-27caa7b79f86" />
 
 <ol>
-          <li>Choose /on_offer so that it is highlighted.</li>
-          <li>Choose Enable CORS.</li>
-          <li>Select Default 4XX and Default 5XX under Gateway responses.</li>
-          <li>Select GET under Access-Control-Allow-Methods.</li>
-          <li>Choose Save.</li>
+<li>Choose /on_offer so that it is highlighted.</li>
+<li>Choose Enable CORS.</li>
+<li>Select Default 4XX and Default 5XX under Gateway responses.</li>
+<li>Select GET under Access-Control-Allow-Methods.</li>
+<li>Choose Save.</li>
 </ol>
 
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/64c109f6-9731-49cc-9399-661f60f6bcb1" />
 
 <ol>
-      <li>Test the /on_offer GET API call..</li>
-      <li>Choose the GET method for /products/on_offer.</li>
-      <li>Choose Test, and then choose Test at the bottom of the page.</li>
-      <li>Scroll down to the Response Headers section. Notice that CORS is enabled in the headers.</li>
+<li>Test the /on_offer GET API call..</li>
+<li>Choose the GET method for /products/on_offer.</li>
+<li>Choose Test, and then choose Test at the bottom of the page.</li>
+<li>Scroll down to the Response Headers section. Notice that CORS is enabled in the headers.</li>
 </ol>
 
 <img width="770" alt="image" src="https://github.com/user-attachments/assets/0b551fd2-7e52-4140-b793-90c68b59c915" />
+Scroll back up to the Response Body section. Do you notice an issue. The Lambda function is returning all of the menu item, not just the specials. This is because the conditional check for on_offer_str is not working.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/e5143c03-659e-4590-ad88-9a128c2f79fb" />
+                  
+                  offer_path_str = event.get('path')
+                  if offer_path_str is not None:
+
+<h4>Analysis: </h4>
+You need to set the API logic for /products/on_offer to pass the path to the event object that Lambda uses. The next step explains how to do that.
+
+Configure the /on_offer integration request details.
+<ol>
+<li>Choose the GET method for /products/on_offer.</li>
+<li>Choose Integration Request.</li>
+<li>Choose Edit. Expand Mapping Templates.</li>
+<li>Choose Add mapping template.</li>
+<li>In the Content-Type box, enter the following text:
+application/json</li>
+</ol>
+
+Under Generate template choose Method request passthrough. Replace the text with the following:
+
+      {
+      "path": "$context.resourcePath"
+        }
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/05f275d5-1f31-4be5-93c1-a3910f4bb289" />
+
+This will evaluate to /products/on_offer. For now, the code simply checks for the existence of the variable. Choose Save at the bottom of the page. Test the GET method for /on_offer again. Choose Test, and then choose Test at the bottom of the page. Verify that only the on offer items (six items) are returned. Excellent! Now that this filter is working, you can deploy the API.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/becdbcb0-1093-40e0-a7a4-f54390f168e1" />
+
+<h4>Deploy the API.</h4>
+<ol>
+<li>In the Resources panel, choose the API root /.</li>
+<li>Choose Deploy API.</li>
+<li>For Deployment stage, choose prod, and then choose Deploy.</li>
+</ol>
+
+
 
 
 
