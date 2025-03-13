@@ -376,6 +376,177 @@ This will evaluate to /products/on_offer. For now, the code simply checks for th
 <li>For Deployment stage, choose prod, and then choose Deploy.</li>
 </ol>
 
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/d1cf6459-22f8-45f8-a154-a3b324e5a747" />
+Congratulations! You have successfully updated the REST API so that it invokes a single Lambda function that can now filter for on offer items. With this logic, you do not need to create and maintain two separate Lambda functions to handle this functionality.
+
+<h2>Task 4: Creating a Lambda function for report requests in the future</h2>
+In this task, you will complete steps that are similar to what you just did. However, this time you will create the Lambda function for the /create_report POST action. Observe and test the Python code that you will use in the Lambda function. Back in the AWS Cloud9 IDE, browse to and open python_3/create_report_code.py.
+Notice that this code does not do much yet. It simply returns a message. In a later lab, you will implement more useful logic to actually create a report; however, this code will suffice for now. Run the following command in the terminal:
+     
+      python_3/create_report_code.py
+
+<img width="752" alt="image" src="https://github.com/user-attachments/assets/7d211df0-68e0-4be7-aee7-036902b6b2d2" />
+
+Notice the capitalized "R" in the word Report. The mock data contained a lowercase "r" instead. This difference is how you can know that the website is accessing the Lambda function and not the mock data. Comment out the last line of the code in the create_report_code.py file. 
+Save the change.
+
+<img width="589" alt="image" src="https://github.com/user-attachments/assets/c9f56912-8a26-4980-baff-f27ff013a34f" />
+
+Edit the wrapper code that you will use to create the Lambda function. Browse to and open python_3/create_report_wrapper.py. On line 5, replace the <FMI_1> placeholder with the LambdaAccessToDynamoDB Role ARN value. Tip: You may need to return to the IAM console to copy the Role ARN value. Save the changes to the file.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/f7bdb2ba-5610-4bcc-bd5e-8d92a4a39135" />
+
+Package the code and store it in the S3 bucket. To place a copy of your code in a .zip file, run the following command:
+
+        zip create_report_code.zip create_report_code.py
+        
+To place the .zip file in the bucket, run the following command. Replace <bucket-name> with the actual bucket name:
+
+        aws s3 cp create_report_code.zip  s3://<bucket-name>
+<img width="686" alt="image" src="https://github.com/user-attachments/assets/e4a1c30e-7673-4c98-983b-ff80552f3df8" />
+
+Finally, to create the Lambda function, run the following command:
+
+        python3 create_report_wrapper.py
+
+The output of the command is DONE, confirming that the code ran without errors.
+<img width="670" alt="image" src="https://github.com/user-attachments/assets/d27edb03-fd85-4f54-8717-c6cbff7eaf7e" />
+Observe the create_report function that you created and test it.
+<ol>
+<li> Browse to the Lambda console.</li>
+<li>Choose the name of the create_report function that you just created.</li>
+<li>In the Code source panel, open (double-click) the create_report_code.py file to display the code.</li>
+</ol>  
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/41da39ef-dd5c-4bce-bca2-d41566fb0466" />
+
+In the Code source panel, open (double-click) the create_report_code.py file to display the code.
+<ol>
+<li> Choose Test. </li>
+<li>For Event name, enter ReportTest</li>
+<li> Keep all of the other default test event values, and choose Save.</li>
+</ol>
+The test event is saved. Choose Test again.
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/b67d59ff-be83-4752-99a8-25bb7ed4eafe" />
+
+A tab that shows the results of your test displays, with a response that shows the message hardcoded into the function code. The following is an example: 
+<img width="887" alt="image" src="https://github.com/user-attachments/assets/6dea50d0-747e-4530-94b2-00e94ac9873c" />
+
+Note the capitalized "R" instead of the lowercase "r" that is used in the mock data. Therefore, you know that the website is accessing the Lambda function and not the mock data. 
+
+<h2>Task 5: Configuring the REST API to invoke the Lambda function to handle reports</h2>
+
+Recall that in a previous task you configured both GET methods in your API to invoke the first Lambda function that you created. In this task, you will complete similar steps to configure the POST method in the API to invoke the new create_report Lambda function. 
+
+Test the existing POST method for /create_report Browse to the API Gateway console. Choose the ProductsApi API, and choose the POST method for create_report.
+Notice on the right side of the page that the method is still accessing a "Mock Endpoint".
+
+<img width="952" alt="image" src="https://github.com/user-attachments/assets/9cebedbd-5dd6-4da8-8f0d-78c1a19bf793" />
+
+Choose Test, and then choose Test at the bottom of the page. Verify that the Response Body correctly returns the mock data (note the lowercase "r" in the results), as in the following example:
+<img width="626" alt="image" src="https://github.com/user-attachments/assets/ad842c61-66cb-4624-b3d3-35fa744d6ccc" />
+
+Replace the mock endpoint with the Lambda function.
+<ol>
+<li>Ensure that the POST method is still selected.</li>
+<li>Choose Integration Request and Edit</li>
+<li>Integration type: Lambda Function</li>
+<li>Lambda Region: us-east-1</li>
+<li>Lambda Function: create_report</li>
+<li>Choose Save.</li>
+</ol>
+
+<img width="956" alt="image" src="https://github.com/user-attachments/assets/f64eeda8-1427-406a-ac07-13044bb5c226" />
+
+Notice on the right side of the page that the POST method is no longer calling a "Mock Endpoint". Instead, it is calling the Lambda function. Test the method again.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/5462744d-39ca-478f-bf93-251d312d22f0" />
+
+Test the method again. The returned data looks like the following example. Note that you are now seeing a capitalized "R" instead of the lowercase "r" from the mock data:
+<img width="947" alt="image" src="https://github.com/user-attachments/assets/85246534-cfd0-4b54-8d3a-55e25031c484" />
+
+Deploy the API.
+<ol>
+<li>In the Resources panel, choose the API root /.</li>
+<li>Choose Deploy API.</li>
+<li>For Deployment stage, choose prod, and then choose Deploy.</li>
+</ol>
+Congratulations! You have successfully updated the REST API so that it invokes the create_report Lambda function.
+
+<img width="956" alt="image" src="https://github.com/user-attachments/assets/7696d46e-fa51-45b2-813b-54dc63561865" />
+
+<h2>Task 6: Testing the integration using the café website</h2>
+
+In this final task, you will test both API calls (/products and /products/on_offer) through the website. 
+Load the café website. Return to the browser tab where you have the café website open, and refresh the page. Note: To find the page again, browse to the Amazon S3 console. Choose the bucket name, choose index.html, and copy the Object URL value. Load the URL in a new browser tab. The café website displays. The website is now accessing the menu data that is stored in DynamoDB.
+Test the menu items filter on the website. Scroll down to the Browse Pastries section of the page. By default, only the "on offer" menu items display. Choose view all and verify that more menu items are returned. If everything displays correctly, that means that your CORS configuration is working properly.
+
+<img width="945" alt="image" src="https://github.com/user-attachments/assets/c9c73599-e1e6-434f-ab41-0591d7dc6741" />
+
+Edit a menu item price in the DynamoDB table, and verify that the change is reflected on the website.
+<ol>
+<li>Select your favorite "on offer" menu item and note the current price.</li>
+<li>In a different browser tab, go to the DynamoDB console and load the FoodProducts table items.</li>
+<li>To open the menu item's record, choose the product_name hyperlink for that item.</li>
+<li>Change the price_in_cents value to a different three-digit or four-digit number.</li>
+<li>Save the change.</li>
+<ol>
+
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/32671345-7b0a-4a3a-bde9-180ce9f1bd0a" />
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/52d96844-a437-415d-bd6f-e718d6cb3959" />
+
+Reload the café website, and verify that the price change is reflected on the website.
+
+<img width="284" alt="image" src="https://github.com/user-attachments/assets/c8c9adc9-df6e-4e32-b2cd-0301a1bcd098" />
+
+<img width="427" alt="image" src="https://github.com/user-attachments/assets/2074cf24-8d82-4ced-8ced-b6cb67ac92d5" />
+
+Sofía is satisfied that she has made progress!
+Her plan to build a serverless, dynamic website with a database backend is really coming to fruition. Sofía's initial plan had three major milestones:
+<ol>
+<li> The first milestone was to create a database backend to store café data. She accomplished that in the DynamoDB lab.</li>
+<li> The second milestone was to create a REST API so that the webpage hosted on Amazon S3 could interact with mock data. She completed the most difficult part of that task during the API            Gateway lab.</li>
+<li>The third milestone was to create Lambda functions to query the DynamoDB table or index, or return a static message, and then to update the REST API resources to initiate the respective         Lambda functions.</li>
+</ol>
+
+You (acting as Sofía) have now built all of these resources in the labs up to this point in the course. The following diagram shows the architecture that you have built.
+
+<img width="419" alt="image" src="https://github.com/user-attachments/assets/640a159a-1411-42df-9d3c-546361957504" />
+
+Sofía knows that she has more work to do. For example, she needs to add authentication so that logged-in users can leverage the create_report API and generate reports. That will be implemented behind the login button that appears at the top of the website. Sofía also just heard from the café owners that they are in the final stages of acquiring another company (a coffee bean supplier). The acquisition will probably create additional requirements. For now though, Sofía decides to celebrate her most recent accomplishment by relaxing with her friends.
+
+<img width="422" alt="image" src="https://github.com/user-attachments/assets/270d1e92-87ea-458a-a73d-886379202add" />
+
+<h2>Lab complete</h2>
+
+© 2024 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
